@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Container, VStack, Text, Input, Button, FormControl, FormLabel, Select, IconButton, HStack, Box, useToast } from "@chakra-ui/react";
+import { Container, VStack, Text, Input, Button, FormControl, FormLabel, Select, IconButton, HStack, Box, useToast, Textarea } from "@chakra-ui/react";
 import { FaSignInAlt, FaSignOutAlt, FaPlus, FaTrash } from "react-icons/fa";
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [order, setOrder] = useState({ item: "", quantity: "" });
+  const [order, setOrder] = useState({ item: "", quantity: "", address: "", invoiceDetails: "" });
   const [orders, setOrders] = useState([]);
   const toast = useToast();
 
@@ -47,9 +47,9 @@ const Index = () => {
   };
 
   const handleAddOrder = () => {
-    if (order.item && order.quantity) {
+    if (order.item && order.quantity && order.address && order.invoiceDetails) {
       setOrders((prevOrders) => [...prevOrders, order]);
-      setOrder({ item: "", quantity: "" });
+      setOrder({ item: "", quantity: "", address: "", invoiceDetails: "" });
       toast({
         title: "Order added.",
         status: "success",
@@ -111,7 +111,15 @@ const Index = () => {
             <FormLabel>Quantity</FormLabel>
             <Input type="number" name="quantity" value={order.quantity} onChange={handleOrderChange} />
           </FormControl>
-          <Button leftIcon={<FaPlus />} colorScheme="teal" onClick={handleAddOrder}>
+          <FormControl id="address">
+            <FormLabel>Address</FormLabel>
+            <Textarea name="address" value={order.address} onChange={handleOrderChange} />
+          </FormControl>
+          <FormControl id="invoiceDetails">
+            <FormLabel>Invoice Details</FormLabel>
+            <Textarea name="invoiceDetails" value={order.invoiceDetails} onChange={handleOrderChange} />
+          </FormControl>
+          <Button leftIcon={<FaPlus />} colorScheme="teal" onClick={handleAddOrder} mt={4}>
             Add Order
           </Button>
           <VStack spacing={2} width="100%">
@@ -120,6 +128,8 @@ const Index = () => {
                 <Box>
                   <Text fontWeight="bold">{order.item}</Text>
                   <Text>Quantity: {order.quantity}</Text>
+                  <Text>Address: {order.address}</Text>
+                  <Text>Invoice Details: {order.invoiceDetails}</Text>
                 </Box>
                 <IconButton aria-label="Delete order" icon={<FaTrash />} colorScheme="red" onClick={() => handleDeleteOrder(index)} />
               </HStack>
